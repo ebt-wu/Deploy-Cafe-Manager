@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/gic"
     API_PREFIX: str = "/api" 
-    CORS_ORIGINS: list[str] = []
+    CORS_ORIGINS: list[str] = ["https://deploy-cafe-manager.onrender.com"]
 
     class Config:
         env_file = ".env"

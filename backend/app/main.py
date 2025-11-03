@@ -23,7 +23,7 @@ def create_app() -> FastAPI:
     )
 
     # CORS
-    allow_origins = settings.CORS_ORIGINS or ["http://localhost:5173"]
+    allow_origins = settings.CORS_ORIGINS or ["https://deploy-cafe-manager.onrender.com"]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=allow_origins,
