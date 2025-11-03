@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+
 from app.core.config import settings
 from app.api.routers import cafes, employees
 from app.api.errors import register_handlers
@@ -10,7 +11,7 @@ from app.api.errors import register_handlers
 from app.domain.models import Base
 from app.db.session import engine
 
-from
+from pathlib import Path
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -37,7 +38,9 @@ def create_app() -> FastAPI:
     # Routers
     app.include_router(cafes.router, prefix=settings.API_PREFIX)
     app.include_router(employees.router, prefix=settings.API_PREFIX)
-    app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+    uploads_path = Path("uploads")
+    if uploads_path.exists() and uploads_path.is_dir():
+        app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
     # Health endpoint
     @app.get("/health", tags=["system"])

@@ -37,27 +37,13 @@ def delete_cafe(id: str):
 
 @router.post("/upload-logo")
 async def upload_logo(file: UploadFile = File(...)):
-    """Upload logo and return file path"""
-    try:
-        # Create uploads directory if not exists
-        upload_dir = Path("uploads/cafes")
-        upload_dir.mkdir(parents=True, exist_ok=True)
-        MAX_FILE_SIZE = 2 * 1024 * 1024 
-        content = await file.read()
-        if len(content) > MAX_FILE_SIZE:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"File size must be less than 2MB. Received: {len(content) / (1024*1024):.2f}MB"
-            )
-        # Save file
-        filename = f"{uuid.uuid4()}_{file.filename}"
-        file_path = upload_dir / filename
-        with open(file_path, "wb") as f:
-            f.write(content)
-        
-        return {
-            "file_path": f"uploads/cafes/{filename}",
-            "filename": filename
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    # Just accept but don't save to disk
+    if file.size > 2 * 1024 * 1024:  # 2MB limit
+        raise HTTPException(status_code=400, detail="File too large")
+    
+    # On Render, files can't be persisted
+    # Just return success - logo feature works locally but not on Render free tier
+    return {
+        "message": "File accepted (not persisted on free tier)",
+        "filename": file.filename
+    }
