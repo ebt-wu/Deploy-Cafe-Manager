@@ -1,0 +1,44 @@
+/* GridStyles.css */
+
+/* Column vertical borders */
+.ag-theme-alpine .ag-cell {
+  border-right: 1px solid #d9d9d9 !important;
+  border-bottom: 1px solid #d9d9d9 !important;
+  font-size: 12px !important; /* Make text smaller */
+}
+
+/* Header column borders and text size */
+.ag-theme-alpine .ag-header-cell {
+  border-right: 1px solid #d9d9d9 !important;
+  border-bottom: 2px solid #d9d9d9 !important;
+  font-size: 13px !important; /* Smaller header text */
+  font-weight: 600;
+}
+
+/* Grid outer border */
+.ag-theme-alpine {
+  border: 1px solid #d9d9d9 !important;
+}
+
+/* Cell focus border */
+.ag-theme-alpine .ag-cell-focus {
+  border: 2px solid #2684FF !important;
+}
+
+/* CENTER HEADERS */
+.ag-theme-alpine .ag-header-cell-label {
+  justify-content: center !important;
+}
+
+/* CENTER CELL CONTENT (for components like buttons) */
+.ag-theme-alpine .ag-cell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Enable text wrapping for auto height */
+.ag-theme-alpine .ag-cell {
+  white-space: normal !important;
+  word-break: break-word !important;
+}

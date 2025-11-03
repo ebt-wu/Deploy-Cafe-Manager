@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.5",
+    "ag-grid-community": "^34.3.0",
+    "ag-grid-react": "^34.3.0",
+    "antd": "^5.27.6",
+    "axios": "^1.13.1",
+    "dayjs": "^1.11.18",
+    "react-router-dom": "^7.9.4"
+  }
+}
