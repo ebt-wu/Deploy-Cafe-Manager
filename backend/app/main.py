@@ -13,6 +13,12 @@ from app.db.session import engine
 
 from pathlib import Path
 
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="GIC Cafe/Employee API",
@@ -40,9 +46,15 @@ def create_app() -> FastAPI:
     uploads_path = Path("uploads")
     if uploads_path.exists() and uploads_path.is_dir():
         app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-    @app.on_event("startup")
-    async def startup_event():
+    
+    # Seed database immediately when app loads
+    try:
+        logger.info("🌱 Attempting to seed database...")
         seed_database()
+        logger.info("✅ Database seeding completed!")
+    except Exception as e:
+        logger.error(f"❌ Database seeding failed: {e}")
+
     # Health endpoint
     @app.get("/health", tags=["system"])
     def health():
