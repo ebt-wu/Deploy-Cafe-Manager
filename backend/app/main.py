@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.db.session import SessionLocal, engine, get_db
 from app.domain.models import Base, Cafe
 from app.api.routers import cafes, employees
-from app.core.exception_handlers import register_handlers
+from app.api.errors import register_handlers
 
 logger = logging.getLogger(__name__)
 
