@@ -14,7 +14,7 @@ from app.core.config import settings
 from app.db.session import SessionLocal, engine
 from app.domain.models import Base, Cafe
 from app.api.routers import cafes, employees
-from app.core.exception_handlers import register_handlers
+from app.api.errors import register_handlers
 
 # NOW import seed (after path is set up)
 from seed import seed_database
