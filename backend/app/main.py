@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.seed import seed_database
-
+from app.db.session import get_db
 from app.core.config import settings
 from app.api.routers import cafes, employees
 from app.api.errors import register_handlers
@@ -49,11 +49,10 @@ def create_app() -> FastAPI:
     
     # Seed database immediately when app loads
     try:
-        logger.info("🌱 Attempting to seed database...")
-        seed_database()
-        logger.info("✅ Database seeding completed!")
+        db = next(get_db())
+        seed_database(db)
     except Exception as e:
-        logger.error(f"❌ Database seeding failed: {e}")
+        logger.error(f"Seeding failed: {e}")
 
     # Health endpoint
     @app.get("/health", tags=["system"])
