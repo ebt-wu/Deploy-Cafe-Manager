@@ -31,50 +31,44 @@ def seed_database():
                 id=str(uuid4()),
                 name="Brew & Bean",
                 description="Cozy corner cafe with specialty coffee and pastries",
-                location="Singapore",
-                logo_url=None
+                location="Singapore"
             ),
             Cafe(
                 id=str(uuid4()),
                 name="The Daily Grind",
                 description="Fast-paced cafe perfect for business meetings and work",
-                location="Singapore",
-                logo_url=None
+                location="Singapore"
             ),
             Cafe(
                 id=str(uuid4()),
                 name="Artisan Roasters",
                 description="Premium single-origin coffee and freshly baked goods",
-                location="Jakarta",
-                logo_url=None
+                location="Jakarta"
+
             ),
             Cafe(
                 id=str(uuid4()),
                 name="Cafe Serenity",
                 description="Quiet study-friendly environment with WiFi",
-                location="Bangkok",
-                logo_url=None
+                location="Bangkok"
             ),
             Cafe(
                 id=str(uuid4()),
                 name="Urban Espresso",
                 description="Modern minimalist cafe in the business district",
-                location="Singapore",
-                logo_url=None
+                location="Singapore"
             ),
             Cafe(
                 id=str(uuid4()),
                 name="Kedai Kopi Tradisional",
                 description="Traditional Indonesian coffee shop with local charm",
-                location="Jakarta",
-                logo_url=None
+                location="Jakarta"
             ),
             Cafe(
                 id=str(uuid4()),
                 name="River Cafe",
                 description="Riverside cafe with scenic views and relaxing ambiance",
-                location="Bangkok",
-                logo_url=None
+                location="Bangkok"
             ),
         ]
         
