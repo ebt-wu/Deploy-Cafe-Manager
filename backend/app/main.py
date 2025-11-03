@@ -1,35 +1,38 @@
 from contextlib import asynccontextmanager
 import os
+import sys
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import logging
 
+# Add app directory to Python path so seed can be imported
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from app.core.config import settings
-from app.db.session import SessionLocal, engine, get_db
+from app.db.session import SessionLocal, engine
 from app.domain.models import Base, Cafe
 from app.api.routers import cafes, employees
-from app.api.errors import register_handlers
+from app.core.exception_handlers import register_handlers
+
+# NOW import seed (after path is set up)
+from seed import seed_database
 
 logger = logging.getLogger(__name__)
-
-# Import the seed function
-from seed import seed_database
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup and shutdown events for the FastAPI app."""
+    """Startup and shutdown events."""
     
-    # Startup event
     print("[Startup] Checking if database needs seeding...")
     db = SessionLocal()
     try:
         cafe_count = db.query(Cafe).count()
         if cafe_count == 0:
             print("[Startup] Database is empty. Seeding with sample data...")
-            seed_database()  # Seed function opens its own session
+            seed_database()
             print("[Startup] Seeding complete!")
         else:
             print(f"[Startup] Database already has {cafe_count} cafes. Skipping seed.")
@@ -38,9 +41,8 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
     
-    yield  # Run the app
+    yield
     
-    # Shutdown event
     print("[Shutdown] Application shutting down...")
 
 
@@ -51,10 +53,9 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc",
         openapi_url="/openapi.json",
-        lifespan=lifespan,  # Attach lifespan here
+        lifespan=lifespan,
     )
     
-    # CORS
     allow_origins = settings.CORS_ORIGINS or ["https://deploy-cafe-manager.onrender.com"]
     app.add_middleware(
         CORSMiddleware,
@@ -64,26 +65,21 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Error handlers
     register_handlers(app)
 
-    # Create tables
     try:
         Base.metadata.create_all(bind=engine)
         print("[Startup] Database tables created or verified.")
     except Exception as e:
         print(f"[Startup] Skipped metadata.create_all: {e}")
 
-    # Routers
     app.include_router(cafes.router, prefix=settings.API_PREFIX)
     app.include_router(employees.router, prefix=settings.API_PREFIX)
     
-    # Mount static files for uploads (if exists)
     uploads_path = Path("uploads")
     if uploads_path.exists() and uploads_path.is_dir():
         app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
     
-    # Health endpoint
     @app.get("/health", tags=["system"])
     def health():
         return {"status": "ok"}
