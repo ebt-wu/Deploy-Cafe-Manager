@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
+from app.seed import seed_database
 
 from app.core.config import settings
 from app.api.routers import cafes, employees
@@ -21,7 +21,6 @@ def create_app() -> FastAPI:
         redoc_url="/redoc",
         openapi_url="/openapi.json",
     )
-
     # CORS
     allow_origins = settings.CORS_ORIGINS or ["https://deploy-cafe-manager.onrender.com"]
     app.add_middleware(
@@ -41,7 +40,9 @@ def create_app() -> FastAPI:
     uploads_path = Path("uploads")
     if uploads_path.exists() and uploads_path.is_dir():
         app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-
+    @app.on_event("startup")
+    async def startup_event():
+        seed_database()
     # Health endpoint
     @app.get("/health", tags=["system"])
     def health():
