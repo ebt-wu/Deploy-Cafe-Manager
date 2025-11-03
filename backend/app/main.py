@@ -1,23 +1,33 @@
-# app/main.py
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from app.seed import seed_database
-from app.db.session import get_db
-from app.core.config import settings
+from app.db.session import SessionLocal
+from app.domain.models import Cafe
 from app.api.routers import cafes, employees
-from app.api.errors import register_handlers
 
-from app.domain.models import Base
-from app.db.session import engine
+# Import the seed function
+from seed import seed_database
 
-from pathlib import Path
-
-import logging
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup event
+    print("[Startup] Checking if database needs seeding...")
+    db = SessionLocal()
+    try:
+        cafe_count = db.query(Cafe).count()
+        if cafe_count == 0:
+            print("[Startup] Database is empty. Seeding with sample data...")
+            seed_database()
+            print("[Startup] Seeding complete!")
+        else:
+            print(f"[Startup] Database already has {cafe_count} cafes. Skipping seed.")
+    finally:
+        db.close()
+    
+    yield  # Run the app
+    
+    # Shutdown event (optional cleanup)
+    print("[Shutdown] Application shutting down...")
 
 def create_app() -> FastAPI:
     app = FastAPI(
