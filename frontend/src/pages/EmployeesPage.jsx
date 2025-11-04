@@ -44,7 +44,7 @@ const GenderRenderer = (props) => {
 const EmployeesPage = () => {
   const [searchParams] = useSearchParams();
   const cafeFilter = searchParams.get('cafeId') || ''; //this is the id 
-  const cafeName = searchParams.get('cafe') || '';
+  const cafeName = searchParams.get('cafeName') || '';
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const gridRef = useRef(null);
