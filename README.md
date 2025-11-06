@@ -6,7 +6,7 @@
 ### Run with Docker
 `git clone https://github.com/YOUR_USERNAME/Cafe-Manager.git`
 
-`cd gic-platform`
+`cd Cafe-Manager`
 
 `docker-compose up --build`
 
